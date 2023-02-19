@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostBinding,
-  HostListener,
-  OnInit,
-  Renderer2,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 @Directive({
   selector: '[appDropdown]',
 })
