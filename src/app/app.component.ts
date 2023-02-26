@@ -8,12 +8,6 @@ import { OnInit, ChangeDetectorRef } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   title = 'recipe-book';
-  createform: FormGroup;
-  file: any;
-  loadedFeature = 'recipe';
   constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) {}
   ngOnInit(): void {}
-  onNavigate(feature) {
-    this.loadedFeature = feature;
-  }
 }
