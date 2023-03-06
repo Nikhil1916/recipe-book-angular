@@ -5,3 +5,7 @@
 .mr-2 {
   margin-right: 2px;
 }
+
+.cursor-pointer{
+  cursor: pointer;
+}

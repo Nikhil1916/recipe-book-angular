@@ -15,6 +15,7 @@ import { DropdownDirective } from './shared/dropdown.directive';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+import { OnlyNumberDirective } from './shared/only-number.directive';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
     DropdownDirective,
     RecipeStartComponent,
     RecipeEditComponent,
+    OnlyNumberDirective,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
   providers: [ShoppingListService],
