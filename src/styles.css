@@ -2,10 +2,19 @@
 .mb-4 {
   margin-bottom: 4px;
 }
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
 .mr-2 {
   margin-right: 2px;
 }
 
-.cursor-pointer{
+.mt-4 {
+  margin-top: 4px;
+}
+
+.cursor-pointer {
   cursor: pointer;
 }
