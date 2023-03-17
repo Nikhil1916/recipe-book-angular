@@ -18,6 +18,8 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
 import { OnlyNumberDirective } from './shared/only-number.directive';
 import { RecipeService } from './recipes/recipes.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthComponent } from './auth/auth.component';
+import { LoaderComponent } from './shared/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { HttpClientModule } from '@angular/common/http';
     RecipeStartComponent,
     RecipeEditComponent,
     OnlyNumberDirective,
+    AuthComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
