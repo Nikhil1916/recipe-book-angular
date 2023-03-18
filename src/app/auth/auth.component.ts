@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
 import { AuthResponseData, AuthService } from './auth.service';
-
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-export class AuthComponent {
-  constructor(private authS: AuthService) {}
+export class AuthComponent implements OnInit {
+  constructor(private authS: AuthService, private router: Router) {}
   isLoggedIn = true;
   isLoading: boolean = false;
   error: string = null;
-
+  ngOnInit(): void {
+    this.authS.user.subscribe((res) => {});
+  }
   onSwitchMode() {
     this.isLoggedIn = !this.isLoggedIn;
   }
@@ -36,6 +38,7 @@ export class AuthComponent {
       next: (res) => {
         console.log(res);
         this.isLoading = false;
+        this.router.navigate(['/recipes']);
       },
       error: (error) => {
         console.log(error);

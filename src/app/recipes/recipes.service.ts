@@ -1,28 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Ingredient } from '../shared/ingredients.model';
 import { Recipe } from './recipe.model';
-import { map, tap } from 'rxjs/operators';
+import { exhaustMap, map, take, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
+import { userModel } from '../auth/user.model';
 
 @Injectable()
 export class RecipeService {
-  constructor(private httpS: HttpClient) {}
-  // private recipes: Recipe[] = [
-  //   new Recipe(
-  //     'Test Recipe 1',
-  //     'this is a test',
-  //     'https://img.freepik.com/premium-photo/indian-dhal-spicy-curry-bowl-spices-herbs-rustic-black-wooden-background_2829-4751.jpg',
-  //     [new Ingredient('onion', 23), new Ingredient('potato', 11)]
-  //   ),
-  //   new Recipe(
-  //     'Test Recipe 2',
-  //     'this is a test',
-  //     'https://img.freepik.com/premium-photo/indian-dhal-spicy-curry-bowl-spices-herbs-rustic-black-wooden-background_2829-4751.jpg',
-  //     [new Ingredient('tomato', 10), new Ingredient('curry', 5)]
-  //   ),
-  // ];
+  constructor(private httpS: HttpClient, private authS: AuthService) {}
   private recipes: Recipe[] = [];
+  user: userModel;
   getRecipes() {
     return this.recipes.slice();
   }
@@ -48,10 +36,16 @@ export class RecipeService {
 
   storeRecipe() {
     const recipes = this.getRecipes();
-    return this.httpS
-      .put(
-        'https://recipe-book-2023-7a5ff-default-rtdb.firebaseio.com/recipes.json',
-        recipes
+    this.authS.user
+      .pipe(
+        take(1),
+        exhaustMap((user) => {
+          return this.httpS.put(
+            'https://recipe-book-2023-7a5ff-default-rtdb.firebaseio.com/recipes.json?auth=' +
+              user.token,
+            recipes
+          );
+        })
       )
       .subscribe((res) => {
         console.log(res);
@@ -59,26 +53,26 @@ export class RecipeService {
   }
 
   fetchRecipes() {
-    return this.httpS
-      .get(
-        'https://recipe-book-2023-7a5ff-default-rtdb.firebaseio.com/recipes.json'
-      )
-      .pipe(
-        map((recipes: Recipe[]) => {
-          return recipes.map((recipe) => {
-            return {
-              ...recipe,
-              ingredients: recipe.ingredients ? recipe.ingredients : [],
-            };
-          });
-        }),
-        tap((res) => {
-          this.setRecipes(res);
-        })
-      );
-    // .subscribe((res: Recipe[]) => {
-    //   console.log(res);
-    // });
+    return this.authS.user.pipe(
+      take(1),
+      exhaustMap((user: any) => {
+        return this.httpS.get(
+          'https://recipe-book-2023-7a5ff-default-rtdb.firebaseio.com/recipes.json?auth=' +
+            user?.token
+        );
+      }),
+      map((recipes: any) => {
+        return recipes.map((recipe) => {
+          return {
+            ...recipe,
+            ingredients: recipe.ingredients ? recipe.ingredients : [],
+          };
+        });
+      }),
+      tap((res: any) => {
+        this.setRecipes(res);
+      })
+    );
   }
 
   setRecipes(recipes: Recipe[]) {

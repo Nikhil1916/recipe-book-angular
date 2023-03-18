@@ -16,18 +16,21 @@
       (window:resize)="collapsed = true"
     >
       <ul class="nav navbar-nav">
-        <li [routerLinkActive]="'active'">
+        <li *ngIf="isLoggedIn" [routerLinkActive]="'active'">
           <a href="#" [routerLink]="['recipes']">Recipes</a>
+        </li>
+        <li *ngIf="!isLoggedIn" [routerLinkActive]="'active'">
+          <a href="#" [routerLink]="['auth']">Authenticate</a>
         </li>
         <li [routerLinkActive]="'active'">
           <a href="#" [routerLink]="['shopping-list']">Shopping List</a>
         </li>
-        <li [routerLinkActive]="'active'">
-          <a href="#" [routerLink]="['auth']">Shopping List</a>
-        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown" appDropdown>
+        <li *ngIf="isLoggedIn">
+          <a class="cursor-pointer" (click)="onLogout()">Logout</a>
+        </li>
+        <li *ngIf="isLoggedIn" class="dropdown" appDropdown>
           <a class="dropdown-toggle cursor-pointer"
             >Manage<span class="caret"></span
           ></a>

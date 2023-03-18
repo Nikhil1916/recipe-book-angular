@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 import { RecipeService } from '../recipes/recipes.service';
 
 @Component({
@@ -6,10 +14,18 @@ import { RecipeService } from '../recipes/recipes.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent {
-  constructor(private recipeS: RecipeService) {}
+export class HeaderComponent implements OnInit, OnDestroy {
+  constructor(private recipeS: RecipeService, private authS: AuthService) {}
   collapsed = true;
+  subscription: Subscription;
+  isLoggedIn = false;
   @Output() featureEmitter = new EventEmitter<string>();
+  ngOnInit() {
+    this.subscription = this.authS.user.subscribe((res) => {
+      this.isLoggedIn = !!res;
+      console.log(this.isLoggedIn);
+    });
+  }
   onSelect(feature) {
     this.featureEmitter.emit(feature);
   }
@@ -18,5 +34,13 @@ export class HeaderComponent {
   }
   fetchRecipes() {
     this.recipeS.fetchRecipes().subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+  onLogout() {
+    this.authS.onLogout();
+    // this.
   }
 }
