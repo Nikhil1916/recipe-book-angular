@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
-import { BehaviorSubject, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { userModel } from './user.model';
 import { Router } from '@angular/router';
 
@@ -18,6 +18,7 @@ export interface AuthResponseData {
 })
 export class AuthService {
   user = new BehaviorSubject<userModel>(null);
+  tokenExpirationTimer: any;
   constructor(private http: HttpClient, private router: Router) {}
   signup(email, password) {
     return this.http
@@ -60,6 +61,11 @@ export class AuthService {
   onLogout() {
     this.user.next(null);
     this.router.navigate(['auth']);
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
+    localStorage.clear();
   }
 
   private handleError(errorRes) {
@@ -92,7 +98,38 @@ export class AuthService {
 
   private handleAuthentication(email, userId, token, expiresIn) {
     const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
+    this.autoLogOut(+expiresIn * 1000);
     const user = new userModel(email, userId, token, expirationDate);
     this.user.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));
+  }
+
+  autoLogin() {
+    const user: { email; id; _token; _tokenExpirationDate } = JSON.parse(
+      localStorage.getItem('userData')
+    );
+    if (!user) {
+      return;
+    }
+    const newUser = new userModel(
+      user.email,
+      user.id,
+      user._token,
+      user._tokenExpirationDate
+    );
+    newUser['_tokenExpirationDate'] = new Date(user['_tokenExpirationDate']);
+    if (newUser.token) {
+      const remainTime =
+        new Date(newUser['_tokenExpirationDate']).getTime() -
+        new Date().getTime();
+      this.autoLogOut(remainTime);
+      this.user.next(newUser);
+    }
+  }
+
+  autoLogOut(expiresIn) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.onLogout();
+    }, expiresIn);
   }
 }
