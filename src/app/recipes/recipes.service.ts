@@ -11,6 +11,7 @@ export class RecipeService {
   constructor(private httpS: HttpClient, private authS: AuthService) {}
   private recipes: Recipe[] = [];
   user: userModel;
+
   getRecipes() {
     return this.recipes.slice();
   }
