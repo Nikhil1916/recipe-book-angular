@@ -7,7 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./loader.component.css'],
 })
 export class LoaderComponent {
-  constructor() {
-    console.log('okok');
-  }
+  constructor() {}
 }
