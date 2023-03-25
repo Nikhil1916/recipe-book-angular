@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { sharedModule } from '../shared/shared.module';
@@ -24,7 +23,7 @@ const declarables = [
     RecipeRoutingModule,
     sharedModule,
   ],
-  // exports: [...declarables],
+  exports: [],
   declarations: [...declarables],
   providers: [],
 })

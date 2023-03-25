@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { sharedModule } from '../shared/shared.module';
 import { AuthComponent } from './auth.component';
-const routes = [{ path: 'auth', component: AuthComponent }];
+const routes = [{ path: '', component: AuthComponent }];
 @NgModule({
   imports: [FormsModule, sharedModule, RouterModule.forChild(routes)],
   declarations: [AuthComponent],
