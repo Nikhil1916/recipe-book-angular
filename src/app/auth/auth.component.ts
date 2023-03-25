@@ -51,8 +51,10 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
     authObs.subscribe({
       next: (res) => {
-        this.isLoading = false;
         this.router.navigate(['/recipes']);
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 2000);
       },
       error: (error) => {
         console.log(error);
@@ -65,7 +67,6 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   private showErrorAlert(error) {
-    // const alert = new AlertComponent();
     const alertCompFac =
       this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
     const hostViewContRef = this.alert.viewContainerRef;

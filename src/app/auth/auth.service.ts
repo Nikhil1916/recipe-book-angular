@@ -4,6 +4,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { userModel } from './user.model';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 export interface AuthResponseData {
   refreshToken: string;
@@ -19,11 +20,14 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<userModel>(null);
   tokenExpirationTimer: any;
-  constructor(private http: HttpClient, private router: Router) {}
+  API_KEY;
+  constructor(private http: HttpClient, private router: Router) {
+    this.API_KEY = environment.fireBaseAPIKey;
+  }
   signup(email, password) {
     return this.http
       .post<AuthResponseData>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDjKuVqoFja3J4_tqv0RFawd12FUgunVBw`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`,
         { email, password, returnSecureToken: true }
       )
       .pipe(
@@ -42,7 +46,7 @@ export class AuthService {
   logIn(email, password) {
     return this.http
       .post<AuthResponseData>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDjKuVqoFja3J4_tqv0RFawd12FUgunVBw`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`,
         { email, password, returnSecureToken: true }
       )
       .pipe(
